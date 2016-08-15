@@ -17,40 +17,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- /* eslint no-var: 0 */
- /* eslint no-console: 0 */
- /* eslint object-shorthand: 0 */
- /* jscs:disable requireEnhancedObjectLiterals */
-var url = require('url');
-var express = require('express');
-var proxy = require('express-http-proxy');
 var webpack = require('webpack');
-var config = require('./webpack.config.dev');
+var config = require('./webpack.config.base');
 
-var app = express();
-var compiler = webpack(config);
+config.plugins = [].concat(config.plugins, [
+  new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+  new webpack.optimize.OccurrenceOrderPlugin(),
+  new webpack.optimize.DedupePlugin(),
+  new webpack.optimize.UglifyJsPlugin({
+    compress: { screw_ie8: true, warnings: false },
+    mangle: { screw_ie8: true },
+    output: { screw_ie8: true, comments: false }
+  })
+]);
 
-var PORT = process.env.PORT || 8080;
-var API_HOST = process.env.API_HOST || 'http://localhost:9000';
-
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}));
-
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.all('*', proxy(API_HOST, {
-  forwardPath: function (req) {
-    return url.parse(req.url).path;
-  }
-}));
-
-app.listen(PORT, 'localhost', function (err) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  console.log('Listening at http://localhost:' + PORT);
+config.module.loaders.unshift({
+  test: /\.js$/,
+  loader: 'babel',
+  exclude: /(node_modules|libs)/,
+  query: require('../babel/babel.prod')
 });
+
+module.exports = config;
