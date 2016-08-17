@@ -32,7 +32,7 @@ import static org.sonar.db.version.ColumnDefValidation.validateColumnName;
  */
 public class VarcharColumnDef extends AbstractColumnDef {
   public static final int MAX_SIZE = 4_000;
-  public static final int UUID_VARCHAR_SIZE = 50;
+  public static final int UUID_VARCHAR_SIZE = 40;
 
   private final int columnSize;
 
