@@ -146,6 +146,8 @@ public class TaskActionTest {
     WsCe.Task task = taskResponse.getTask();
     assertThat(task.getId()).isEqualTo("TASK_1");
     assertThat(task.getErrorMessage()).isEqualTo(activityDto.getErrorMessage());
+    assertThat(task.hasErrorStacktrace()).isTrue();
+    assertThat(task.getErrorStacktrace()).isEqualTo(activityDto.getErrorStacktrace());
     assertThat(task.hasHasErrorStacktrace()).isTrue();
     assertThat(task.getHasErrorStacktrace()).isTrue();
   }
@@ -169,6 +171,7 @@ public class TaskActionTest {
     WsCe.Task task = taskResponse.getTask();
     assertThat(task.getId()).isEqualTo("TASK_1");
     assertThat(task.getErrorMessage()).isEqualTo(activityDto.getErrorMessage());
+    assertThat(task.hasErrorStacktrace()).isFalse();
     assertThat(task.hasHasErrorStacktrace()).isTrue();
     assertThat(task.getHasErrorStacktrace()).isTrue();
   }
@@ -190,6 +193,7 @@ public class TaskActionTest {
     WsCe.Task task = taskResponse.getTask();
     assertThat(task.getId()).isEqualTo("TASK_1");
     assertThat(task.getErrorMessage()).isEqualTo(activityDto.getErrorMessage());
+    assertThat(task.hasErrorStacktrace()).isFalse();
     assertThat(task.hasHasErrorStacktrace()).isTrue();
     assertThat(task.getHasErrorStacktrace()).isFalse();
   }
